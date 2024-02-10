@@ -1,0 +1,83 @@
+---
+title: "Project 1"
+author: "Olai Gaarn Skogen"
+date: '2024-02-10'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(MASS)
+```
+
+
+# Problem 1A
+
+Correlation functions.
+
+Powered exponential function and Matérn function
+
+```{r}
+powered_exp_corr <- function(dist, range, alpha){
+  return(exp(-(dist/range)^alpha))
+}
+
+matern_corr <- function(dist, range, smooth){
+  nu = sqrt(8*smooth)*dist/range
+  return(2^(1-smooth) * nu * BesselK(nu) / gamma(smooth))
+}
+
+```
+
+Semi-variogram function
+
+## How do I calc semi variogram from covariance
+
+```{r}
+semi_variogram_from_cov <- function(cov_vec)
+```
+
+# Problem 1B
+
+Because $\boldsymbol{X}$ is a Gaussian Random Field it is by definition distributed as a multivariate normal distribution with $\boldsymbol{\mu} = E[\boldsymbol{X}]$ and $\Sigma = Cov[\boldsymbol{X}, \boldsymbol{X}]$. 
+
+```{r}
+calc_spatial_cov_matrix <- function(cov_func, s){
+  Sigma = c()
+  for(i in 1:length(s)){
+    dist_i = abs(s[i] - s)
+    print(dist_i)
+    covar = cov_func(dist_i)
+    Sigma = rbind(Sigma, covar)
+  }
+  return(Sigma)
+}
+```
+
+```{r}
+n = 50
+sigma_sq = 5
+range = 10
+smoothness = 3
+pw_exp_cov_func_11 <- function(dist){sigma_sq*powered_exp_corr(dist, range, smoothness)}
+
+s = seq(1, n)
+mu = integer(n)
+Sigma = calc_spatial_cov_matrix(pw_exp_cov_func_11, s)
+
+print(Sigma)
+
+X = mvrnorm(mu = mu, Sigma = Sigma)
+plot(s, X)
+```
+
+
+# Problem 2A
+
+```{r}
+
+```
+
